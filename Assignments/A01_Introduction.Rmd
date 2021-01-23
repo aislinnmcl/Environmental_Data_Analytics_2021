@@ -1,6 +1,6 @@
 ---
 title: "Assignment 1: Introduction"
-author: "Student Name"
+author: Aislinn McLaughlin
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -22,21 +22,21 @@ The completed exercise is due on <>.
 
 1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
 
-> Answer: 
+> Answer: I have started using R with my research on water utility rate structures and affordability with Lauren Patterson. Right now she sends me blocks of code to help me make different calculations, so I'm not writing any myself. I use GitHub Desktop to track changes, but have really only done commit/push since I am just updating excel files.
 
 2. Are there any components of the course about which you feel confident?
 
-> Answer: 
+> Answer: I feel confident that I can learn all of this! But not confident in that I don't know how to do any of it yet.
 
 3. Are there any components of the course about which you feel apprehensive?
 
-> Answer: 
+> Answer: I suppose the one thing I always get nervous about is making an unfixable mistake that affects other people's work, so it was nice to hear that we can't push anything upstream.
 
 
 ## 2) GitHub
 
 Provide a link below to your forked course repository in GitHub. Make sure you have pulled all recent changes from the course repository  and that you have updated your course README file. 
 
-> Answer: 
+> Answer: https://github.com/aislinnmcl/Environmental_Data_Analytics_2021.git
 
 
