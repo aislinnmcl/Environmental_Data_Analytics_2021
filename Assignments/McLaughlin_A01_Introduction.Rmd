@@ -22,7 +22,7 @@ The completed exercise is due on <>.
 
 1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
 
-> Answer: I have started using R with my research on water utility rate structures and affordability with Lauren Patterson. Right now she sends me blocks of code to help me make different calculations, so I'm not writing any myself. I use GitHub Desktop to track changes, but have really only done commit/push since I am just updating excel files.
+> Answer: I have started using R with my research on water utility rate structures and affordability with Lauren Patterson. Right now she sends me blocks of code to help me make different calculations, so I'm not writing any myself. I use GitHub Desktop to track changes, but have really only done commit/push since I am just updating excel files. Before coming to Duke I worked as an analyst for a tech company so I have some Excel knowledge.
 
 2. Are there any components of the course about which you feel confident?
 
