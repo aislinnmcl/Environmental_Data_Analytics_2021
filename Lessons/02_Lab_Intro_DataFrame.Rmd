@@ -3,6 +3,8 @@ title: "Intro to Data Frames in R"
 author: "Luana Lima"
 date: "1/27/2021"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -66,7 +68,7 @@ class(df_car_speed)
 How could you add columns to *df_car_speed*?
 
 ```{r}
-car_dist <- cars$dist
+car_dist <- cars$dist #dist is an attribute of cars
 
 #Option 1
 df <- cbind(df_car_speed,car_dist)  #similarly rows could be added using rbind()
