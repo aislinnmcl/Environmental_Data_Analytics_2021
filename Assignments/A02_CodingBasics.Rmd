@@ -83,4 +83,4 @@ passing_score(test_scores)
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer: `ifelse` worked because it allows you to run the function over a vector. You would have to loop an `if` and `else` statement probably to get it to evaluate multiple values.
+> Answer: `ifelse` worked because it allows you to run the function over a vector. You get an error related to length if you try to run a `function(x)` using `if` and `else` if `x` has a length greater than 1. You would probably have to loop an `if` and `else` statement to get it to evaluate multiple values.
