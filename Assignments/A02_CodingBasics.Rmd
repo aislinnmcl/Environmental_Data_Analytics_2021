@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2: Coding Basics"
-author: "Student Name"
+author: Aislinn McLaughlin
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -32,10 +32,14 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 
 ```{r}
 #1. 
+seq100 <- seq(1,100,4) #generates sequence of numbers from 1 to 100, increment of 4 and assigns to object
 
-#2. 
+#2.
+mean(seq100) #computes the mean
+median(seq100) #computes the median
 
-#3. 
+#3.
+mean(seq100) > median(seq100) #mean greater than median? 
 
 ```
 
@@ -51,11 +55,18 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 
 ```{r}
 
+student_names <- c("Ann", "Jan", "Fran", "Nan") #string vector
+test_scores <- c(98, 72, 50, 41) #integer vector
+pass_50 <- c(test_scores>=50) #logical vector
+
+school_df <- data.frame("Name"=student_names, "Grade"=test_scores, "Pass?"=pass_50)
+school_df
+
 ```
 
 9. QUESTION: How is this data frame different from a matrix?
 
-> Answer: 
+> Answer: Dataframesare more flexible and can have columns with different data types while matrices cannot.
 
 10. Create a function with an if/else statement. Your function should determine whether a test score is a passing grade of 50 or above (TRUE or FALSE). You will need to choose either the `if` and `else` statements or the `ifelse` statement. Hint: Use `print`, not `return`. The name of your function should be informative.
 
@@ -63,8 +74,13 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 
 ```{r}
 
+passing_score <- function(x) {
+  ifelse(x >= 50, TRUE, FALSE)
+}
+passing_score(test_scores)
+
 ```
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer: 
+> Answer: `ifelse` worked because it allows you to run the function over a vector. You would have to loop an `if` and `else` statement probably to get it to evaluate multiple values.
