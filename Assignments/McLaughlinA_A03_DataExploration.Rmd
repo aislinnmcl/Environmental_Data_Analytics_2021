@@ -1,6 +1,6 @@
 ---
 title: "Assignment 3: Data Exploration"
-author: "Student Name"
+author: "Aislinn McLaughlin"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -24,6 +24,13 @@ The completed exercise is due on <>.
 1. Check your working directory, load necessary packages (tidyverse), and upload two datasets: the ECOTOX neonicotinoid dataset (ECOTOX_Neonicotinoids_Insects_raw.csv) and the Niwot Ridge NEON dataset for litter and woody debris (NEON_NIWO_Litter_massdata_2018-08_raw.csv). Name these datasets "Neonics" and "Litter", respectively. 
 ```{r,  message = FALSE}
 
+getwd()
+setwd("~/Documents/GitHub/Environmental_Data_Analytics_2021")
+
+library(tidyverse)
+
+Neonics <- read.csv("./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv")
+Litter <- read.csv("./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
 
 ```
 
@@ -31,18 +38,18 @@ The completed exercise is due on <>.
 
 2. The neonicotinoid dataset was collected from the Environmental Protection Agency's ECOTOX Knowledgebase, a database for ecotoxicology research. Neonicotinoids are a class of insecticides used widely in agriculture. The dataset that has been pulled includes all studies published on insects. Why might we be interested in the ecotoxicologoy of neonicotinoids on insects? Feel free to do a brief internet search if you feel you need more background information. 
 
-> Answer: 
+> Answer: We want neonicotinoids to be as targeted as possible i.e. only kill the destructive insects. Ecotoxicology research will allow us to see what sort of effect they have on non-target insect populations such as bees, whic are important for pollination, and ladybugs, which are important predators that may kill undesirable insects.
 
 3. The Niwot Ridge litter and woody debris dataset was collected from the National Ecological Observatory Network, which collectively includes 81 aquatic and terrestrial sites across 20 ecoclimatic domains. 32 of these sites sample forest litter and woody debris, and we will focus on the Niwot Ridge long-term ecological research (LTER) station in Colorado. Why might we be interested in studying litter and woody debris that falls to the ground in forests? Feel free to do a brief internet search if you feel you need more background information. 
 
-> Answer: 
+> Answer: There are probably many reasons to study litter and woody debris. They can both be important habitat for insects and both help return nutrients to the soil. Woody debris is also important for carbon capture - the longer it takes to decompose, the longer the carbon is kept out of the atmosphere.
 
 4. How is litter and woody debris sampled as part of the NEON network? Read the NEON_Litterfall_UserGuide.pdf document to learn more. List three pieces of salient information about the sampling methods here: 
 
 > Answer: 
-*
-*
-*
+*Sample masses are recorded to an accuracy of 0.01.
+*Sampling sites must have specimen >2m tall.
+*Frequency of sample collection varies by trap type: ground traps are sampled once per year while elevated traps are sampled every 1-2 weeks or every 1-2 months.
 
 
 
@@ -52,10 +59,14 @@ The completed exercise is due on <>.
 
 ```{r}
 
+dim(Neonics)
+
 ```
 
 6. Using the `summary` function on the "Effects" column, determine the most common effects that are studied. Why might these effects specifically be of interest?
 ```{r}
+
+summary(Neonics$Effect)
 
 ```
 
@@ -73,9 +84,11 @@ The completed exercise is due on <>.
 
 ```{r}
 
+class(Neonics$Conc.1..Author.)
+
 ```
 
-> Answer:
+> Answer: This class of the Conc.1..Author column is character. 
 
 
 
@@ -108,6 +121,8 @@ Interpret this graph. What are the most common test locations, and do they diffe
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018. 
 ```{r}
+
+class(Litter$collectDate)
 
 ```
 
