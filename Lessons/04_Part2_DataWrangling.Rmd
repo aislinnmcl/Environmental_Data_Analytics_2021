@@ -7,6 +7,9 @@ geometry: margin=2.54cm
 editor_options: 
   chunk_output_type: console
 ---
+*******************************
+>My Questions: Why does summary display the other lakes even though you filtered for Peter and Paul and assigned to an object?
+*******************************
 
 ## Objectives
 1. Describe the usefulness of data wrangling and its place in the data pipeline
@@ -48,14 +51,15 @@ summary(NTL.nutrient.data.PeterPaul$lakename)
 NTL.nutrient.data.PeterPaul <- droplevels(NTL.nutrient.data.PeterPaul)
 summary(NTL.nutrient.data.PeterPaul$lakename)
 summary(NTL.nutrient.data.PeterPaul$comments)
+#Need to reformat date again
 class(NTL.nutrient.data.PeterPaul$sampledate)
 NTL.nutrient.data.PeterPaul$sampledate <- as.Date(NTL.nutrient.data.PeterPaul$sampledate, format = "%m/%d/%y")
 
 NTL.nutrient.data.PeterPaul <- 
-  NTL.nutrient.data.PeterPaul %>% #
-  mutate(month = month(sampledate)) %>% #
-  select(lakeid:daynum, month, sampledate:comments) %>% # 
-  drop_na(depth)
+  NTL.nutrient.data.PeterPaul %>% #assign dataframe
+  mutate(month = month(sampledate)) %>% #add month column
+  select(lakeid:daynum, month, sampledate:comments) %>% #move month column next to sampledate
+  drop_na(depth) #remove NA depths
 
 # Save processed nutrient file
 write.csv(NTL.nutrient.data.PeterPaul, row.names = FALSE, 
@@ -69,6 +73,8 @@ NTL.nutrient.data.PeterPaul.subset <- select(NTL.nutrient.data.PeterPaul,
                                              lakename, year4, daynum, month, sampledate, depth:po4)
 
 # write a more succinct line of code to subset the nutrient dataset. 
+
+NTL.nutrient.data.PeterPaul.subset <- select(NTL.nutrient.data.PeterPaul, lakename:sampledate, depth:po4)
 
 ```
 
@@ -100,7 +106,8 @@ write.csv(NTL.nutrient.data.PeterPaul.gathered, row.names = FALSE,
 # Spread nutrient data into separate columns
 #NTL.nutrient.data.PeterPaul.spread <- spread(NTL.nutrient.data.PeterPaul.gathered, nutrient, concentration)
 
-# Spread nutrient data into separate columns using pivot_wider
+# Spread nutrient data into separate columns using pivot_wider, opposite of pivot_longer transformation
+# Smaller than original dataset by 2 rows, probably because 2 rows had NA for all nutrient concentration values
 NTL.nutrient.data.PeterPaul.spread2 <- pivot_wider(NTL.nutrient.data.PeterPaul.gathered, names_from = nutrient, values_from = concentration)
 
 # Split components of cells into multiple columns
