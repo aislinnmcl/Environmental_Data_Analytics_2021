@@ -7,8 +7,10 @@ geometry: margin=2.54cm
 editor_options: 
   chunk_output_type: console
 ---
+
 *******************************
->My Questions: Why does summary display the other lakes even though you filtered for Peter and Paul and assigned to an object?
+>My Questions: Why does summary display the other lakes even though you filtered for Peter and Paul and assigned to an object? Why would you use a pipe if only doing one operation e.g. select for LitterTrap? `summarise()` has grouped output by 'lakename'. You can override using the `.groups` argument...
+
 *******************************
 
 ## Objectives
