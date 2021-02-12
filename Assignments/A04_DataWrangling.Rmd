@@ -162,7 +162,7 @@ write.csv(EPAair.O3.PM25,"./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
 EPAair.summary.df <-
   EPAair.O3.PM25 %>%
   group_by(Site.Name, month, year) %>%
-  summarise(mean_AQI_O3 = mean(Ozone), mean_AQI_PM25 = mean(PM2.5))
+  summarise(mean_AQI_O3 = mean(Ozone), mean_AQI_PM25 = mean(PM2.5), .groups = "keep")
 
 #12b
 
@@ -176,4 +176,4 @@ dim(EPAair.summary.df)
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: 
+> Answer: `drop_na` simply drops rows containing missing values while `na.omit` assigns an attribute with class "omit". It's also faster when working with multiple inputs.
