@@ -3,6 +3,8 @@ title: "Assignment 4: Data Wrangling"
 author: "Aislinn McLaughlin"
 output: pdf_document
 geometry: margin=2.54cm
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## OVERVIEW
@@ -122,15 +124,30 @@ EPAair.df <-
 
 #8
 
-EPAair.df.short <-
-  
+EPAair.df.common <-
+  EPAair.df %>%
+  filter(Site.Name %in% c("Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School")) %>%
+  group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
+  summarise(mean_AQI = mean(DAILY_AQI_VALUE)) %>%
+  mutate(month = month(Date)) %>%
+  mutate(year = year(Date))
 
 #9
 
+EPAair.O3.PM25 <-
+  EPAair.df.common %>%
+  pivot_wider(
+    names_from = AQS_PARAMETER_DESC,
+    values_from = mean_AQI
+    )
+
 #10
+
+dim(EPAair.O3.PM25)
 
 #11
 
+write.csv(EPAair.O3.PM25,"./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
 ```
 
 
@@ -141,6 +158,8 @@ EPAair.df.short <-
 
 ```{r}
 #12a
+
+
 
 #12b
 
