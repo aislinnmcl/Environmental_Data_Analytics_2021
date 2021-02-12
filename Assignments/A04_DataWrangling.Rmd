@@ -128,7 +128,7 @@ EPAair.df.common <-
   EPAair.df %>%
   filter(Site.Name %in% c("Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School")) %>%
   group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
-  summarise(mean_AQI = mean(DAILY_AQI_VALUE)) %>%
+  summarise(mean_AQI = mean(DAILY_AQI_VALUE), mean_lat = mean(SITE_LATITUDE), mean_long = mean(SITE_LONGITUDE)) %>%
   mutate(month = month(Date)) %>%
   mutate(year = year(Date))
 
@@ -159,11 +159,18 @@ write.csv(EPAair.O3.PM25,"./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
 ```{r}
 #12a
 
-
+EPAair.summary.df <-
+  EPAair.O3.PM25 %>%
+  group_by(Site.Name, month, year) %>%
+  summarise(mean_AQI_O3 = mean(Ozone), mean_AQI_PM25 = mean(PM2.5))
 
 #12b
 
+EPAair.summary.df %>% drop_na(month, year)
+
 #13
+
+dim(EPAair.summary.df)
 
 ```
 
