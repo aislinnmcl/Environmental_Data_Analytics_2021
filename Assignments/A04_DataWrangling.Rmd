@@ -1,6 +1,6 @@
 ---
 title: "Assignment 4: Data Wrangling"
-author: "Student Name"
+author: "Aislinn McLaughlin"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -25,8 +25,34 @@ The completed exercise is due on Tuesday, Feb 16 @ 11:59pm.
 
 ```{r, message = FALSE}
 #1
+getwd()
+setwd("/Users/Aislinn/Documents/GitHub/Environmental_Data_Analytics_2021")
+
+library(tidyverse)
+library(lubridate)
+
+EPAair.O3.2018 <- read.csv("./Data/Raw/EPAair_O3_NC2018_raw.csv", stringsAsFactors = TRUE)
+EPAair.O3.2019 <- read.csv("./Data/Raw/EPAair_O3_NC2019_raw.csv", stringsAsFactors = TRUE)
+EPAair.PM25.2018 <- read.csv("./Data/Raw/EPAair_PM25_NC2018_raw.csv", stringsAsFactors = TRUE)
+EPAair.PM25.2019 <- read.csv("./Data/Raw/EPAair_PM25_NC2019_raw.csv", stringsAsFactors = TRUE)
 
 #2
+
+dim(EPAair.O3.2018)
+dim(EPAair.O3.2019)
+dim(EPAair.PM25.2018)
+dim(EPAair.PM25.2019)
+
+colnames(EPAair.O3.2018)
+colnames(EPAair.O3.2019)
+colnames(EPAair.PM25.2018)
+colnames(EPAair.PM25.2019)
+
+summary(EPAair.O3.2018)
+summary(EPAair.O3.2019)
+summary(EPAair.PM25.2018)
+summary(EPAair.PM25.2019)
+
 ```
 
 ## Wrangle individual datasets to create processed files.
@@ -37,12 +63,41 @@ The completed exercise is due on Tuesday, Feb 16 @ 11:59pm.
 
 ```{r}
 #3
+EPAair.O3.2018$Date <-
+  as.Date(EPAair.O3.2018$Date, format = "%m/%d/%Y")
+EPAair.O3.2019$Date <-
+  as.Date(EPAair.O3.2019$Date, format = "%m/%d/%Y")
+EPAair.PM25.2018$Date <-
+  as.Date(EPAair.PM25.2018$Date, format = "%m/%d/%Y")
+EPAair.PM25.2019$Date <-
+  as.Date(EPAair.PM25.2019$Date, format = "%m/%d/%Y")
 
 #4
+EPAair.O3.2018.processed <- 
+  select(EPAair.O3.2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+EPAair.O3.2019.processed <- 
+  select(EPAair.O3.2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+EPAair.PM25.2018.processed <- 
+  select(EPAair.PM25.2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+EPAair.PM25.2019.processed <- 
+  select(EPAair.PM25.2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
 
 #5
+EPAair.PM25.2018.processed <- 
+  mutate(EPAair.PM25.2018.processed, 
+            AQS_PARAMETER_DESC = "PM2.5"
+            )
 
+EPAair.PM25.2019.processed <- 
+  mutate(EPAair.PM25.2019.processed, 
+            AQS_PARAMETER_DESC = "PM2.5"
+            )
 #6
+
+write.csv(EPAair.O3.2018.processed, "./Data/Processed/EPAair_O3_NC2018_processed.csv")
+write.csv(EPAair.O3.2019.processed, "./Data/Processed/EPAair_O3_NC2019_processed.csv")
+write.csv(EPAair.PM25.2018.processed, "./Data/Processed/EPAair_PM25_NC2018_processed.csv")
+write.csv(EPAair.PM25.2019.processed, "./Data/Processed/EPAair_PM25_NC2019_processed.csv")
 
 ```
 
@@ -62,8 +117,13 @@ The completed exercise is due on Tuesday, Feb 16 @ 11:59pm.
 
 ```{r}
 #7
+EPAair.df <- 
+  rbind(EPAair.O3.2018.processed, EPAair.O3.2019.processed, EPAair.PM25.2018.processed, EPAair.PM25.2019.processed)
 
 #8
+
+EPAair.df.short <-
+  
 
 #9
 
