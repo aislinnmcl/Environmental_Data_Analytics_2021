@@ -34,6 +34,13 @@ EPAair$Date <- as.Date(EPAair$Date, format = "%Y-%m-%d")
 PeterPaul.chem.nutrients$sampledate <- as.Date(PeterPaul.chem.nutrients$sampledate, format = "%Y-%m-%d")
 PeterPaul.chem.nutrients.gathered$sampledate <- as.Date(PeterPaul.chem.nutrients.gathered$sampledate, format = "%Y-%m-%d")
 
+#had to rename "month" and "year" as "Month" and "Year"
+
+EPAair <-
+  EPAair %>%
+  rename(Month = month, 
+         Year = year)
+
 ```
 
 ## ggplot
@@ -87,7 +94,7 @@ print(O3plot)
 
 # Fix this code
 O3plot2 <- ggplot(EPAair) +
-  #geom_point(aes(x = Date, y = Ozone, color = "blue"))
+  #geom_point(aes(x = Date, y = Ozone, color = "blue")) - cannot specify color in aesthetics()
   geom_point(aes(x = Date, y = Ozone), color = "blue")
 print(O3plot2)
 
@@ -147,7 +154,7 @@ tempvsdepth <-
   ggplot(PeterPaul.chem.nutrients, aes(x = temperature_C, y = depth)) +
   #ggplot(PeterPaul.chem.nutrients, aes(x = temperature_C, y = depth, color = daynum)) +
   geom_point() +
-  scale_y_reverse()
+  scale_y_reverse() #makes sense visually because we are dealing with depth
 print(tempvsdepth)
 
 NvsP <-
@@ -186,6 +193,7 @@ print(Nutrientplot5)
 
 # Frequency polygons
 # Using a tidy dataset
+# issues: no legend, not all lines are for "tn_ug". inefficient code.
 Nutrientplot6 <-
   ggplot(PeterPaul.chem.nutrients) +
   geom_freqpoly(aes(x = tn_ug), color = "darkred") +
@@ -194,6 +202,7 @@ Nutrientplot6 <-
   geom_freqpoly(aes(x = no23), color = "royalblue") +
   geom_freqpoly(aes(x = po4), color = "red") 
 print(Nutrientplot6)
+
 
 # Using a gathered dataset
 Nutrientplot7 <-   
