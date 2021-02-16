@@ -1,9 +1,11 @@
 ---
-title: "Assignment 4: Data Wrangling"
+title: 'Assignment 4: Data Wrangling'
 author: "Aislinn McLaughlin"
-output: pdf_document
+output:
+  word_document: default
+  pdf_document: default
 geometry: margin=2.54cm
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -26,9 +28,14 @@ The completed exercise is due on Tuesday, Feb 16 @ 11:59pm.
 2. Explore the dimensions, column names, and structure of the datasets. 
 
 ```{r, message = FALSE}
+
+
 #1
 getwd()
 setwd("/Users/Aislinn/Documents/GitHub/Environmental_Data_Analytics_2021")
+
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE, tidy.opts=list(width.cutoff=80),tidy=FALSE)
 
 library(tidyverse)
 library(lubridate)
@@ -157,16 +164,14 @@ write.csv(EPAair.O3.PM25,"./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
 13. Call up the dimensions of the summary dataset.
 
 ```{r}
-#12a
+#12
 
 EPAair.summary.df <-
   EPAair.O3.PM25 %>%
   group_by(Site.Name, month, year) %>%
-  summarise(mean_AQI_O3 = mean(Ozone), mean_AQI_PM25 = mean(PM2.5), .groups = "keep")
+  summarise(mean_AQI_O3 = mean(Ozone), mean_AQI_PM25 = mean(PM2.5), .groups = "keep") %>%
+  drop_na(month,year)
 
-#12b
-
-EPAair.summary.df %>% drop_na(month, year)
 
 #13
 
@@ -176,4 +181,4 @@ dim(EPAair.summary.df)
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: `drop_na` simply drops rows containing missing values while `na.omit` assigns an attribute with class "omit". It's also faster when working with multiple inputs.
+> Answer: `drop_na` has an argument that allows you to select columns from which you want to omit NAs while `na.omit` simply emits all rows with NA in any column.
