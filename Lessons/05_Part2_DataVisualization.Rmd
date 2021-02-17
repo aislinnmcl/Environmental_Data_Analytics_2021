@@ -30,6 +30,12 @@ PeterPaul.chem.nutrients$sampledate <- as.Date(
 PeterPaul.chem.nutrients.gathered$sampledate <- as.Date(
   PeterPaul.chem.nutrients.gathered$sampledate, format = "%Y-%m-%d")
 
+# renaming colums so subsequent code works
+EPAair <-
+  EPAair %>%
+  rename(Month = month, 
+         Year = year)
+
 ```
 
 
@@ -40,6 +46,7 @@ O3plot <- ggplot(EPAair) +
   geom_point(aes(x = Date, y = Ozone)) 
 print(O3plot)
 
+# won't change anything, default theme is gray
 O3plot1 <- ggplot(EPAair) +
   geom_point(aes(x = Date, y = Ozone)) +
   theme_gray()
@@ -63,8 +70,8 @@ print(O3plot4)
 
 Notice that some aspects of your graph have not been adjusted, including: 
 
-* text size
-* axis label colors
+* text size (default is 11)
+* axis label colors (default is black)
 * legend position and justification
 
 If you would like to set a common theme across all plots in your analysis session, you may define a theme and call up that theme for each graph. This eliminates the need to add multiple lines of code in each plot. 
@@ -81,6 +88,7 @@ O3plot5 <- ggplot(EPAair) +
   mytheme
 print(O3plot5)  
 
+# use to set theme for all subsequent plots generated
 theme_set(mytheme)
 
 O3plot6 <- ggplot(EPAair) +
@@ -102,8 +110,8 @@ O3plot7 <- ggplot(EPAair, aes(x = Date, y = Ozone)) +
   geom_text(x = as.Date("2020-01-01"), y = 95, label = "moderate", hjust = 1, fontface = "bold") +
   geom_text(x = as.Date("2020-01-01"), y = 120, label = "unhealthy (sensitive groups)", hjust = 1, fontface = "bold") +
   scale_x_date(limits = as.Date(c("2018-01-01", "2019-12-31")), 
-    date_breaks = "2 months", date_labels = "%b %y") +
-  ylab(expression("O"[3]* " AQI Value")) +
+    date_breaks = "2 months", date_labels = "%b %y") + #%b is abbrev for month name, first three letters
+  ylab(expression("O"[3]* " AQI Value")) + #changes y-axis label, subscript for "3"
   theme(axis.text.x = element_text(angle = 45,  hjust = 1))
 print(O3plot7)  
 
@@ -175,8 +183,8 @@ print(NvsP)
 NvsP2 <-
   ggplot(PeterPaul.chem.nutrients, aes(x = tp_ug, y = tn_ug, color = depth, shape = lakename)) +
   geom_point(alpha = 0.7, size = 2.5) +
-  #labs() + # change your legend labels here
-  scale_shape_manual(values = c(15, 17)) +
+  labs(color = "Depth", shape = "Lake Name") + # change your legend labels here
+  scale_shape_manual(values = c(15, 17)) + #15 and 17 corrspond to specific shapes in scale_shape_manual
   #scale_color_distiller(palette = "Blues", direction = 1) + # use scale_color_brewer for discrete variables
   scale_color_viridis(option = "magma", direction = -1) +
   theme(legend.position = "right", 
@@ -233,9 +241,16 @@ The following graph displays the counts of specific endpoints measured in neonic
 4. Change the color and/or border on the bars. Should you have a consistent color across all bars, or a different color for each bar?
 ```{r}
 Neonics <- read.csv("./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv")
-ggplot(Neonics) +
-  geom_bar(aes(x = Endpoint))
 
+#orders by Endpoint count, increasing
+Neonics$Endpoint <- with(Neonics, reorder(Endpoint, Endpoint, FUN=length))
+
+ggplot(Neonics) +
+  geom_bar(aes(x = Endpoint), fill = "purple") + 
+  scale_x_discrete(limits = rev(levels(Neonics$Endpoint))) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+# no need to color bars differently, they have labels
 
 
 
