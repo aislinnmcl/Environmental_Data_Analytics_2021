@@ -89,7 +89,7 @@ lm(formula = chemnutrients_PeterPaul_processed$po4 ~ chemnutrients_PeterPaul_pro
 
 phos_plot <- ggplot(chemnutrients_PeterPaul_processed, aes(x = tp_ug, y = po4, color = lakename)) +
   geom_point() +
-  geom_abline(slope = 0.2162, intercept = -0.5894) +
+  geom_abline(slope = 0.2162, intercept = -0.5894) + #using geom_smooth(method = lm) gives 2 lines, but want one
   xlim(0, 150) +
   ylim(0, 50) +
   labs(color = "Lake Name")
@@ -104,8 +104,8 @@ print(phos_plot)
 
 #5a
 
-box_temp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = month, y = temperature_C)) +
-  geom_boxplot(aes(color = lakename)) + 
+box_temp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = month, y = temperature_C, color = lakename)) +
+  geom_boxplot() + 
   labs(color = "Lake Name") +
   xlab("Month") +
   ylab("Temperature (°C)")
@@ -114,8 +114,8 @@ print(box_temp)
 
 #5b
 
-box_tp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = month, y = tp_ug)) +
-  geom_boxplot(aes(color = lakename)) + 
+box_tp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = month, y = tp_ug, color = lakename)) +
+  geom_boxplot() + 
   labs(color = "Lake Name") +
   xlab("Month") +
   ylab("Total Phosphorus (µg)")
@@ -123,8 +123,8 @@ print(box_tp)
 
 #5c
 
-box_tn <- ggplot(chemnutrients_PeterPaul_processed, aes(x = month, y = tn_ug)) +
-  geom_boxplot(aes(color = lakename)) + 
+box_tn <- ggplot(chemnutrients_PeterPaul_processed, aes(x = month, y = tn_ug, color = lakename)) +
+  geom_boxplot() + 
   labs(color = "Lake Name") +
   xlab("Month") +
   ylab("Total Nitrogen (µg)")
@@ -158,8 +158,28 @@ Question: What do you observe about the variables of interest over seasons and b
 7. [Niwot Ridge] Now, plot the same plot but with NLCD classes separated into three facets rather than separated by color. 
 
 ```{r}
+#6
+needles_plot <-
+  ggplot(filter(Litter, functionalGroup == "Needles"),
+         aes(x = collectDate, y = dryMass, color = nlcdClass)) +
+  geom_point(alpha = 0.8) +
+  xlab("Date") +
+  ylab("Dry Mass") +
+  scale_color_discrete("NLCD Class")
+print(needles_plot)
+
+#7
+
+needles_facet <-
+  ggplot(filter(Litter, functionalGroup == "Needles"),
+         aes(x = collectDate, y = dryMass)) +
+  geom_point(alpha = 0.6) +
+  xlab("Date") +
+  ylab("Dry Mass") +
+  facet_wrap(vars(nlcdClass))
+print(needles_facet)
 
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer:
+> Answer: I think plot 7 is much more effective. In plot 6, the clustering on the x-axis makes it confusing to interpret the data. It's much easier to see the NLCD classes side by side in plot 7 with the same y-axis. You can still compare dry masses measured by year pretty easily, and I think it's also easier to spot trends in amount of dry mass measured over time for the 3 NLCD classes.
