@@ -132,18 +132,26 @@ print(box_tn)
 
 #5d
 
-box_combo_nl <- plot_grid(
-  box_temp + theme(legend.position="none"),
+box_combo_nl <- 
+  plot_grid(box_temp + theme(legend.position="none"),
   box_tp + theme(legend.position="none"),
   box_tn + theme(legend.position="none"), 
   nrow = 1, 
-  axis = "l", 
+  axis = "b", 
   rel_heights = c(1.25, 1))
+print(box_combo_nl)
 
 legend <- get_legend(box_temp + 
                       guides(color = guide_legend(nrow = 1)) + 
                        theme(legend.position = "bottom"))
-box_combo <- plot_grid(box_combo_nl, legend, ncol = 1, rel_heights = c(1, .3))
+
+box_combo <- 
+  plot_grid(box_combo_nl, 
+            legend, 
+            ncol = 1,
+            align = "v",
+            axis = "bt",
+            rel_heights = c(1, .3))
 
 print(box_combo)
 
