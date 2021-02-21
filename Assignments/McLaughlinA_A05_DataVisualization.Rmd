@@ -43,11 +43,12 @@ library(cowplot)
 library(viridis)
 library(RColorBrewer)
 library(colormap)
-library(ggplot2)
 
-chemnutrients_PeterPaul_processed <- read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
+chemnutrients_PeterPaul_processed <- read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_
+                                              Processed.csv")
 
-nutrients_PeterPaul_gathered <- read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
+nutrients_PeterPaul_gathered <- read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_
+                                         Processed.csv")
 
 Litter <- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
@@ -70,8 +71,9 @@ Litter$collectDate <-
 ```{r}
 
 mytheme <-
-  theme_gray(base_size = 12) +
-  theme(axis.title = element_text(color = "black"), legend.position = "bottom", legend.background = element_rect(color = "gray"))
+  theme_classic(base_size = 12) +
+  theme(axis.title = element_text(color = "black"), legend.position = "bottom", 
+        legend.background = element_rect(color = "gray"))
 
 theme_set(mytheme)
 
@@ -84,14 +86,19 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 
 ```{r}
 #get slope and intercept for linear regression
-lm(formula = chemnutrients_PeterPaul_processed$po4 ~ chemnutrients_PeterPaul_processed$tp_ug)
+lm(formula = chemnutrients_PeterPaul_processed$po4 ~ chemnutrients_PeterPaul_
+   processed$tp_ug)
 
 
-phos_plot <- ggplot(chemnutrients_PeterPaul_processed, aes(x = tp_ug, y = po4, color = lakename)) +
+phos_plot <- ggplot(chemnutrients_PeterPaul_processed, aes(x = tp_ug, y = po4, 
+                                                           color = lakename)) +
   geom_point() +
-  geom_abline(slope = 0.2162, intercept = -0.5894) + #using geom_smooth(method = lm) gives 2 lines, but want one
+  #using geom_smooth(method = lm) gives 2 lines, but want one
+  geom_abline(slope = 0.2162, intercept = -0.5894) + 
   xlim(0, 150) +
   ylim(0, 50) +
+  xlab("Total Phosphorus (µg)") +
+  ylab("Phosphate") +
   labs(color = "Lake Name")
 print(phos_plot)
 
@@ -104,7 +111,9 @@ print(phos_plot)
 
 #5a
 
-box_temp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), y = temperature_C, color = lakename)) +
+box_temp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), 
+                                                          y = temperature_C, 
+                                                          color = lakename)) +
   geom_boxplot() + 
   labs(color = "Lake Name") +
   xlab("Month") +
@@ -114,7 +123,9 @@ print(box_temp)
 
 #5b
 
-box_tp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), y = tp_ug, color = lakename)) +
+box_tp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), 
+                                                        y = tp_ug, 
+                                                        color = lakename)) +
   geom_boxplot() + 
   labs(color = "Lake Name") +
   xlab("Month") +
@@ -123,7 +134,9 @@ print(box_tp)
 
 #5c
 
-box_tn <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), y = tn_ug, color = lakename)) +
+box_tn <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), 
+                                                        y = tn_ug, 
+                                                        color = lakename)) +
   geom_boxplot() + 
   labs(color = "Lake Name") +
   xlab("Month") +
@@ -159,7 +172,7 @@ print(box_combo)
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: 
+> Answer: Temperatures have very large ranges at the start of the calendar year, but htey shrink over time as we enter the fall. We also don't have any outliers in our temperature plot. Total phosphorus measurements seem to peak in the summer months. The total phosphorus measurements for Peter Lake become more dispersed over the months, whereas the measurements for Paul Lake become less dispersed, with the exception of the final month. Our total nitrogen measurements also have a substantial number of outliers. The range of data seems relatively limited (short-ish whiskers) and the data from Peter Lake is generally more dispersed than the data from Paul Lake (longer boxes).
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
@@ -173,7 +186,7 @@ needles_plot <-
   geom_point(alpha = 0.8) +
   xlab("Date") +
   ylab("Dry Mass") +
-  scale_color_discrete("NLCD Class")
+  labs(color='NLCD Class') 
 print(needles_plot)
 
 #7
