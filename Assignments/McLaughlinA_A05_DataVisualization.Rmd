@@ -44,11 +44,9 @@ library(viridis)
 library(RColorBrewer)
 library(colormap)
 
-chemnutrients_PeterPaul_processed <- read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_
-                                              Processed.csv")
+chemnutrients_PeterPaul_processed <- read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
 
-nutrients_PeterPaul_gathered <- read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_
-                                         Processed.csv")
+nutrients_PeterPaul_gathered <- read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
 
 Litter <- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
@@ -86,12 +84,10 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 
 ```{r}
 #get slope and intercept for linear regression
-lm(formula = chemnutrients_PeterPaul_processed$po4 ~ chemnutrients_PeterPaul_
-   processed$tp_ug)
+lm(formula = chemnutrients_PeterPaul_processed$po4 ~ chemnutrients_PeterPaul_processed$tp_ug)
 
 
-phos_plot <- ggplot(chemnutrients_PeterPaul_processed, aes(x = tp_ug, y = po4, 
-                                                           color = lakename)) +
+phos_plot <- ggplot(chemnutrients_PeterPaul_processed, aes(x = tp_ug, y = po4, color = lakename)) +
   geom_point() +
   #using geom_smooth(method = lm) gives 2 lines, but want one
   geom_abline(slope = 0.2162, intercept = -0.5894) + 
@@ -111,9 +107,7 @@ print(phos_plot)
 
 #5a
 
-box_temp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), 
-                                                          y = temperature_C, 
-                                                          color = lakename)) +
+box_temp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), y = temperature_C, color = lakename)) +
   geom_boxplot() + 
   labs(color = "Lake Name") +
   xlab("Month") +
@@ -123,9 +117,7 @@ print(box_temp)
 
 #5b
 
-box_tp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), 
-                                                        y = tp_ug, 
-                                                        color = lakename)) +
+box_tp <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), y = tp_ug, color = lakename)) +
   geom_boxplot() + 
   labs(color = "Lake Name") +
   xlab("Month") +
@@ -134,9 +126,7 @@ print(box_tp)
 
 #5c
 
-box_tn <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), 
-                                                        y = tn_ug, 
-                                                        color = lakename)) +
+box_tn <- ggplot(chemnutrients_PeterPaul_processed, aes(x = as.factor(month), y = tn_ug, color = lakename)) +
   geom_boxplot() + 
   labs(color = "Lake Name") +
   xlab("Month") +
@@ -152,7 +142,6 @@ box_combo_nl <-
   nrow = 1, 
   axis = "b", 
   rel_heights = c(1.25, 1))
-print(box_combo_nl)
 
 legend <- get_legend(box_temp + 
                       guides(color = guide_legend(nrow = 1)) + 
