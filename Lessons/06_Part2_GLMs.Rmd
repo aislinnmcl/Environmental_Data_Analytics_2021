@@ -42,7 +42,7 @@ Litter.Totals <- Litter %>%
   summarise(dryMass = sum(dryMass))
 
 summary(Litter.Totals)
-#check all value of plotID
+#check all value of plotID, some sites have been sampled more than others
 summary(Litter.Totals$plotID)
 
 # Test for normality. 
@@ -71,15 +71,15 @@ qqnorm(Litter.Totals$dryMass); qqline(Litter.Totals$dryMass)
 # bartlett.test() performs Bartlett's test of the null that the variances in each of the groups (samples) are the same.
 bartlett.test(Litter.Totals$dryMass ~ Litter.Totals$plotID)
 
-#results: reject null i.e. variances are not equal
+#results: p-value < .05, reject null i.e. variances are not equal
 
 # Format ANOVA as aov
 Litter.Totals.anova <- aov(data = Litter.Totals, dryMass ~ plotID)
 summary(Litter.Totals.anova)
 
-#results: reject null hypothesis i.e. difference between a pair of group means is statiscally significant
+#results: reject null hypothesis i.e. difference between a pair of group means is statistically significant
 
-# Format ANOVA as lm
+# Format ANOVA as lm, main difference is summary output - lm has one row for each level of categorical variable. mean estimates are with respect to intercept
 Litter.Totals.anova2 <- lm(data = Litter.Totals, dryMass ~ plotID)
 summary(Litter.Totals.anova2)
 
@@ -109,7 +109,7 @@ print(Litter.Totals.plot)
 
 What information does the output give us? How might we report this information in a report?
 
-> 
+> Need to reorder sites (i.e. a, ab, abc) so you can see changes in the mean.
 
 ## TWO-WAY ANOVA
 ### Main effects
@@ -158,12 +158,18 @@ Litter.anova.2way5 <- aov(data = Litter, dryMass ~ Litter.interaction)
 
 Litter.groups <- HSD.test(Litter.anova.2way5, "Litter.interaction", group = TRUE)
 Litter.groups
+#output in groups column tells you which groups can be compared (e.g. a cannot be compared with anything else, there is only one a group)
 
 # Plot the results
 # Edit this graph to make it more visually appealing.
 # Add letters to represent statistical groupings.
 Litter.anova.plot <- ggplot(Litter, aes(y = dryMass, x = nlcdClass, color = functionalGroup)) +
-  geom_boxplot()
+  geom_boxplot() +
+  labs(x = "NLCD Class", y = "Dry Mass", color = "Functional Group") +
+    stat_summary(geom = "text", fun = max, vjust = -1, size = 3.5,
+               label = c("d", "d", "d", "d", "d", "a", "d", "d",
+                         "d", "d", "d", "d", "d", "b", "d", "d", 
+                         "d", "cd", "d", "d", "d", "bc", "d", "d")) #don't think this is right... ask in class
 print(Litter.anova.plot)
 
 ```
