@@ -169,7 +169,7 @@ Litter.anova.plot <- ggplot(Litter, aes(y = dryMass, x = nlcdClass, color = func
     stat_summary(geom = "text", fun = max, vjust = -1, size = 3.5,
                label = c("d", "d", "d", "d", "d", "a", "d", "d",
                          "d", "d", "d", "d", "d", "b", "d", "d", 
-                         "d", "cd", "d", "d", "d", "bc", "d", "d")) #don't think this is right... ask in class
+                         "d", "cd", "d", "d", "d", "bc", "d", "d"))
 print(Litter.anova.plot)
 
 ```
