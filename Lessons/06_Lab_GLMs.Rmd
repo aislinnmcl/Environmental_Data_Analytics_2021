@@ -27,7 +27,7 @@ PeterPaul.chem.nutrients$sampledate <- as.Date(PeterPaul.chem.nutrients$sampleda
 EPAair <- read.csv("./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv", stringsAsFactors = TRUE)
 # Set date to date format
 EPAair$Date <- as.Date(EPAair$Date, format = "%Y-%m-%d")
-
+EPAair <- rename(EPAair, Year = year)
 
 Litter <- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv", stringsAsFactors = TRUE)
 # Set date to date format
@@ -67,22 +67,24 @@ Are Ozone levels below the threshold for "good" AQI index (0-50)?
 > Exercise 1: State the hypotheses for testing mean of AQI index.
 
 > Answer: 
+H0: µ >= 50 ppm
+Ha: µ < 50 ppm
 
 
 ```{r}
 
 
-summary(EPAair$Ozone)
-EPAair.subsample <- sample_n(EPAair, 5000)
+summary(EPAair$Ozone) #mean is lower than 50, but could be thrown off by a lot of things which is why we still need t-test
+EPAair.subsample <- sample_n(EPAair, 5000) #Shapiro test can only run on <= 5000 records
 
 # Evaluate assumption of normal distribution
-shapiro.test((EPAair.subsample$Ozone))
+shapiro.test((EPAair.subsample$Ozone)) #p-value is probability that null hypothesis is true. null value is that data are normal. this test shows likelihood that our data are normal is small
 ggplot(EPAair, aes(x = Ozone)) +
   geom_histogram() 
-qqnorm(EPAair$Ozone); qqline(EPAair$Ozone)
+qqnorm(EPAair$Ozone); qqline(EPAair$Ozone) #if data were normal, your data would lie along the line
 
 O3.onesample <- t.test(EPAair$Ozone, mu = 50, alternative = "less")
-O3.onesample
+O3.onesample #p-value is way less than .05, so probability that mean is >=50 is very small (probability that null hypothesis is true)
 
 Ozone.plot <- ggplot(EPAair, aes(x = Ozone)) +
   #geom_density(stat = "count", fill = "gray") +
@@ -94,7 +96,7 @@ print(Ozone.plot)
 
 Write a sentence or two about the results of this test. Include both the results of the test and an interpretation that puts the findings in context of the research question.
 
-> 
+> On average, ozone measured in NC is less than 50 ppm over the time period of... (t-test, df = 6829, p-value < 0.001).
 
 ### Two-sample t-test
 
@@ -150,6 +152,21 @@ Create three plots, each with appropriately formatted axes and legends. Choose a
 ```{r}
 #Exercise 2:
 
+plot1 <-
+  ggplot(EPAair, aes(x = Year, y = Ozone)) +
+  geom_density(alpha = 0.8)
+print(plot1)
+
+plot2 <-
+  ggplot(EPAair, aes(x = Year, y = Ozone)) +
+  geom_boxplot() +
+  stat_summary
+print(plot2)
+
+plot3 <-
+  ggplot(EPAair, aes(x = Year, y = Ozone)) +
+  geom_violin()
+print(plot3)
 
 ```
 
@@ -163,10 +180,15 @@ For the NTL-LTER dataset, can we predict PM2.5 from Ozone?
 
 #Exercise 3: Run a linear regression PM2.5 by Ozone. Find the p-value and R-squared value. 
 
-
+the_model <-
+  lm(data = EPAair, PM2.5 ~ Ozone)
+summary(the_model)
 
 #Exercise 4: Build a scatterplot. Add a line and standard error for the linear regression. Add the regression equation to the plot
 
+ggplot(data = EPAair, aes(x = Ozone, y = PM2.5)) +
+  geom_point() +
+  geom_smooth(method = "lm")
 
 
 ```
