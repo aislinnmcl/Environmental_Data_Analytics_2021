@@ -1,9 +1,11 @@
 ---
-title: "Assignment 7: GLMs (Linear Regressios, ANOVA, & t-tests)"
+title: 'Assignment 7: GLMs (Linear Regressios, ANOVA, & t-tests)'
 author: "Aislinn McLaughlin"
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
 geometry: margin=2.54cm
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -24,9 +26,18 @@ The completed exercise is due on Tuesday, March 2 at 1:00 pm.
 1. Set up your session. Check your working directory. Load the tidyverse, agricolae and other needed packages. Import the *raw* NTL-LTER raw data file for chemistry/physics (`NTL-LTER_Lake_ChemistryPhysics_Raw.csv`). Set date columns to date objects.
 
 2. Build a ggplot theme and set it as your default theme.
+```{r wrap}
+
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=50),tidy=TRUE)
+
+```
 
 ```{r setup}
 #1
+
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=80),tidy=TRUE)
 
 # setup
 getwd()
@@ -49,7 +60,7 @@ lake.chem.phys$sampledate <-
 
 mytheme <-
   theme_gray(base_size = 12) +
-  theme(legend.background = element_rect(fill = "gray"), legend.position = "bottom", plot.title = element_text(face = "bold", size = 14, color = "black", hjust = 0.5), plot.subtitle = element_text(size = 10, color = "gray", hjust = 0.5))
+  theme(legend.background = element_rect(fill = "gray"), legend.position = "bottom",  plot.title = element_text(face = "bold", size = 14, color = "black", hjust = 0.5), plot.subtitle = element_text(size = 10, color = "gray", hjust = 0.5))
 
 theme_set(mytheme)
 
@@ -171,7 +182,7 @@ summary(temp.lakes.July.ANOVA2)
 
 13. Is there a significant difference in mean temperature among the lakes? Report your findings. 
 
-> Answer: Our null hypothesis is that the mean temperature is the same across all lakes. Both the ANOVA and linear models give us p-values < 0.05 so we can reject the null hypothesis. 
+> Answer: Our null hypothesis is that the mean temperature is the same across all lakes. Both the ANOVA and linear models give us p-values < 0.05 so we can reject the null hypothesis. There is a statistically significant difference in the means across all lakes.
 
 
 14. Create a graph that depicts temperature by depth, with a separate color for each lake. Add a geom_smooth (method = "lm", se = FALSE) for each lake. Make your points 50 % transparent. Adjust your y axis limits to go from 0 to 35 degrees. Clean up your graph to make it pretty. 
@@ -184,7 +195,8 @@ temp.depth.lakes.plot <-
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE) +
   ylim(0, 35) +
-  labs(x = "Depth (meters)", y = "Temperature (°C)", title = "Temperature vs Depth", subtitle = "North Temperate Lakes District", color = "Lake Name")
+  labs(x = "Depth (meters)", y = "Temperature (°C)", title = "Temperature vs Depth", subtitle = "North Temperate Lakes District", color = "Lake Name") +
+  guides(color = guide_legend(nrow = 3))
 
 temp.depth.lakes.plot
 
@@ -201,6 +213,16 @@ temp.lakes.totals <-
   HSD.test(temp.lakes.July.ANOVA, "lakename", group = TRUE)
 temp.lakes.totals
 
+
+shapiro.test(lake.chem.phys.July$temperature_C[lake.chem.phys.July$lakename == "Peter Lake"])
+shapiro.test(lake.chem.phys.July$temperature_C[lake.chem.phys.July$lakename == "Paul Lake"])
+
+lake.chem.phys.pp <-
+  lake.chem.phys.July %>%
+  filter(lakename == "Peter Lake" | lakename == "Paul Lake")
+
+var.test(lake.chem.phys.pp$temperature_C ~ lake.chem.phys.pp$lakename)
+
 ```
 
 16.From the findings above, which lakes have the same mean temperature, statistically speaking, as Peter Lake? Does any lake have a mean temperature that is statistically distinct from all the other lakes?
@@ -210,6 +232,6 @@ temp.lakes.totals
 
 17. If we were just looking at Peter Lake and Paul Lake. What's another test we might explore to see whether they have distinct mean temperatures? 
 
->Answer: We could use a two-way ANOVA so that we can include two categorical variables.
+>Answer: We could also use a two-sample t-test to compare the means of Peter Lake and Paul Lake. 
 
 
