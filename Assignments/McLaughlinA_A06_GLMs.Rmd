@@ -1,5 +1,5 @@
 ---
-title: 'Assignment 7: GLMs (Linear Regressios, ANOVA, & t-tests)'
+title: 'Assignment 7: GLMs (Linear Regressions, ANOVA, & t-tests)'
 author: "Aislinn McLaughlin"
 output:
   pdf_document: default
@@ -110,7 +110,7 @@ print(lake.July.plot)
 
 6. Interpret the figure. What does it suggest with regards to the response of temperature to depth? Do the distribution of points suggest about anything about the linearity of this trend?
 
-> Answer: As depth decreases, temperature increases. The increase in temperature as it relates to depth accelerates around a depth of 8 m from the surface. The distribution of points suggests this is not a linear relationship. For the most part, there seem to be more data points on top of the linear regression line and the points are not evenly distributed with regards to distance from the line.
+> Answer: As depth decreases, temperature increases. The increase in temperature as it relates to depth accelerates around a depth of 8 m from the surface. The distribution of points suggests this is not a linear relationship. The cluster of points that occur quite far from the line of best fit when depth is high and temperature is low indicate that this is probably more of a logarithmic relationship.
 
 
 7. Perform a linear regression to test the relationship and display the results
@@ -128,7 +128,7 @@ summary(temperature.regression)
 
 8. Interpret your model results in words. Include how much of the variability in temperature is explained by changes in depth, the degrees of freedom on which this finding is based, and the statistical significance of the result. Also mention how much temperature is predicted to change for every 1m change in depth. 
 
-> Answer: Changes in depth explain 73.87% of the variability in temperature (simple linear regression, df = 9726, p-value = 2.2e-16). Because our p-value is below 0.05, this regression is meaningful. For every 1m increase in depth, temperature will change by ~ 1.95°C.
+> Answer: Changes in depth explain 73.87% of the variability in temperature (simple linear regression, df = 9726, p-value = 2.2e-16). Because our p-value is below 0.05, this regression is meaningful. For every 1m increase in depth, temperature will decrease by ~ 1.95°C.
 
 
 ---
