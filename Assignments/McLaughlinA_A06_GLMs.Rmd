@@ -26,18 +26,15 @@ The completed exercise is due on Tuesday, March 2 at 1:00 pm.
 1. Set up your session. Check your working directory. Load the tidyverse, agricolae and other needed packages. Import the *raw* NTL-LTER raw data file for chemistry/physics (`NTL-LTER_Lake_ChemistryPhysics_Raw.csv`). Set date columns to date objects.
 
 2. Build a ggplot theme and set it as your default theme.
-```{r wrap}
 
-library(knitr)
-opts_chunk$set(tidy.opts=list(width.cutoff=50),tidy=TRUE)
-
-```
 
 ```{r setup}
 #1
 
+library(formatR)
 library(knitr)
 opts_chunk$set(tidy.opts=list(width.cutoff=80),tidy=TRUE)
+options(width = 80)
 
 # setup
 getwd()
@@ -60,7 +57,9 @@ lake.chem.phys$sampledate <-
 
 mytheme <-
   theme_gray(base_size = 12) +
-  theme(legend.background = element_rect(fill = "gray"), legend.position = "bottom",  plot.title = element_text(face = "bold", size = 14, color = "black", hjust = 0.5), plot.subtitle = element_text(size = 10, color = "gray", hjust = 0.5))
+  theme(legend.background = element_rect(fill = "gray"), legend.position = "bottom",
+        plot.title = element_text(face = "bold", size = 14, color = "black", hjust = 0.5),
+        plot.subtitle = element_text(size = 10, color = "gray", hjust = 0.5))
 
 theme_set(mytheme)
 
@@ -87,15 +86,16 @@ Ha: Mean lake temperature recorded during July does change with depth across all
 
 lake.chem.phys.July <-
   lake.chem.phys %>%
-  mutate(month = month(sampledate)) %>%
-  filter(month == 7) %>%
-  select(lakename, year4, daynum, depth, temperature_C) %>%
-  na.omit()
+    mutate(month = month(sampledate)) %>%
+    filter(month == 7) %>%
+    select(lakename, year4, daynum, depth, temperature_C) %>%
+    na.omit()
 
 #5
 
 lake.July.plot <-
-  ggplot(lake.chem.phys.July, aes(x = temperature_C, y = depth, color = depth)) +
+  ggplot(lake.chem.phys.July, aes(x = temperature_C, y = depth, 
+                                  color = depth)) +
   geom_point() + 
   geom_smooth(method = lm, color = "black") +
   scale_y_reverse() +
@@ -191,12 +191,20 @@ summary(temp.lakes.July.ANOVA2)
 #14.
 
 temp.depth.lakes.plot <-
-  ggplot(data = lake.chem.phys.July, aes(x = depth, y = temperature_C, color = lakename)) +
+  ggplot(data = lake.chem.phys.July, aes(x = depth, y = temperature_C, 
+                                         color = lakename)) +
   geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE) +
-  ylim(0, 35) +
-  labs(x = "Depth (meters)", y = "Temperature (°C)", title = "Temperature vs Depth", subtitle = "North Temperate Lakes District", color = "Lake Name") +
-  guides(color = guide_legend(nrow = 3))
+  geom_smooth(method = "lm", 
+              se = FALSE) +
+    ylim(0, 35) +
+
+      labs(x = "Depth (meters)", 
+         y = "Temperature (°C)", 
+         title = "Temperature vs Depth",
+         subtitle = "North Temperate Lakes District", 
+         color = "Lake Name") +
+   
+   guides(color = guide_legend(nrow = 3))
 
 temp.depth.lakes.plot
 
@@ -213,15 +221,6 @@ temp.lakes.totals <-
   HSD.test(temp.lakes.July.ANOVA, "lakename", group = TRUE)
 temp.lakes.totals
 
-
-shapiro.test(lake.chem.phys.July$temperature_C[lake.chem.phys.July$lakename == "Peter Lake"])
-shapiro.test(lake.chem.phys.July$temperature_C[lake.chem.phys.July$lakename == "Paul Lake"])
-
-lake.chem.phys.pp <-
-  lake.chem.phys.July %>%
-  filter(lakename == "Peter Lake" | lakename == "Paul Lake")
-
-var.test(lake.chem.phys.pp$temperature_C ~ lake.chem.phys.pp$lakename)
 
 ```
 
