@@ -184,7 +184,7 @@ summary(wind_data$AWND)
 # In real applications you will simply replace NAs
 wind_data_clean <- 
   wind_data %>% 
-  mutate( AWND.clean = zoo::na.approx(AWND) )
+  mutate( AWND.clean = zoo::na.approx(AWND) ) # add the name of the package (zoo) if the function occurs in multiple packages. don't have to call library
 
 summary(wind_data_clean$AWND.clean)
 #Note the NA is gone
@@ -231,6 +231,7 @@ plot(wind_data_decomp)
 
 # Run SMK test
 wind_data_trend1 <- Kendall::SeasonalMannKendall(wind_data_ts)
+#null hypothesis is that the data is stationary. if p<.05, reject null.
 
 # Inspect results
 wind_data_trend1
