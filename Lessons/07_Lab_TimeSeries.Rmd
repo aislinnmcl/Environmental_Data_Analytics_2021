@@ -56,7 +56,8 @@ Temp_BR <- read.csv("./Data/Raw/tas_1901_2016_BRA.csv", stringsAsFactors = TRUE)
 Rainfall_BR_processed <-
   Rainfall_BR %>% 
   rename( Rainfall = Rainfall....MM.) %>% 
-  separate(Statistics,c("Null","Month","Null2")," ") %>% 
+  #separate takes 3 arguments - column, elements, separator
+  separate(Statistics,c("Null","Month","Null2")," ") %>% # if you put NA instead of the nulls, it will just pull month
   mutate( Date = my(paste0(Month,"-",Year))) %>% 
   select(Date,Rainfall)
 
@@ -82,13 +83,26 @@ BRA_complete <- inner_join(Rainfall_BR_processed,Temp_BR_processed)
 
 #Exercise 5: Check if there is any missing data for both temperature and rainfall series.
 
-
+summary(BRA_complete$Rainfall)
+summary(BRA_complete$Temperature_C)
+summary(BRA_complete$Date)
 
 
 #Exercise 6: Plot both series over time on separate plots. Add a trend line using geom_smooth(). Can you say something about the trend just by visualizing the data?
 
+plot.rainfall.time <-
+  ggplot(BRA_complete, aes (x = Date, y = Rainfall)) +
+  geom_line() +
+  geom_smooth(method = lm)
+#stationary! no trend
+plot.rainfall.time
 
+plot.temp.time <-
+  ggplot(BRA_complete, aes (x = Date, y = Temperature_C)) +
+  geom_line() +
+  geom_smooth(method = lm)
 
+plot.temp.time
 
 
 
@@ -99,7 +113,17 @@ BRA_complete <- inner_join(Rainfall_BR_processed,Temp_BR_processed)
 ```{r}
 #Exercise 7: Create a time series objects for each series using ts(). Make sure you specify the starting point and frequency.
 
+#identify start month and start year
+f_month <-
+  month(first(BRA_complete$Date))
+f_year <-
+  year(first(BRA_complete$Date))
 
+rainfall.ts <- 
+  ts(BRA_complete$Rainfall, start = c(f_year, f_month), frequency = 12)
+
+temp.ts <-
+  ts(BRA_complete$Temperature_C, start = c(f_year, f_month), frequency = 12)
 
 ```
 
@@ -122,24 +146,50 @@ The `stl` function decomposes the time series object into its component parts. W
 # Visualize the decomposed series using plot(). What components can you identify?
 
 
+rainfall.decomp <-
+  stl(rainfall.ts, s.window = "periodic") # can use periodic instead of specific value bc we specified frequency above
+plot(rainfall.decomp)
 
+temp.decomp <-
+  stl(temp.ts, s.window = "periodic")
+plot(temp.decomp)
 
 
 
 # Exercise 9: Use the times series object generated with the stl() to extract the 
 # components of each series and turn them into data frames.
 
+rainfall.components <-
+  as.data.frame(rainfall.decomp$time.series[,1:3])
 
+# safe to just add components back on because none of our operations would have deleted a row, so order is the same
+rainfall.components <-
+  mutate(rainfall.components,
+         Date = Rainfall_BR_processed$Date,
+         Observed = Rainfall_BR_processed$Rainfall)
 
+temp.components <-
+  as.data.frame(temp.decomp$time.series[,1:3])
 
+temp.components <-
+  mutate(temp.components,
+         Date = Temp_BR_processed$Date,
+         Observed = Temp_BR_processed$Temperature_C)
 
 
 # Exercise 10: Visualize how the trend maps onto the data for both series
 
+plot.rainfall.components <-
+  ggplot(rainfall.components) +
+  geom_line(aes(x = Date, y = Observed), color = "gray") +
+  geom_line(aes(x = Date, y = trend), color = "blue")
+print(plot.rainfall.components)
 
-
-
-
+plot.temp.components <-
+  ggplot(temp.components) +
+  geom_line(aes(x = Date, y = Observed), color = "gray") +
+  geom_line(aes(x = Date, y = trend), color = "red")
+print(plot.temp.components)
 
 ```
 
@@ -159,24 +209,45 @@ Monotonic trends are a gradual shift over time that is consistent in direction. 
 # Exercise 11: Apply one of the trend detection test to the original data set. Remember that the data has seasonal component, which test can be applied in this case?
 
 
+rainfall.trend1 <- Kendall::SeasonalMannKendall(rainfall.ts)
+rainfall.trend2 <- smk.test(rainfall.ts)
 
+temp.trend1 <- SeasonalMannKendall(temp.ts)
+temp.trend2 <- smk.test(temp.ts)
 
+print(rainfall.trend1) #null hypothesis is no trend, but p-value is small so we reject null
+summary(rainfall.trend1)
+summary(rainfall.trend2)
 
-
-
-
+print(temp.trend1) #null hypothesis is no trend, but p-value is small so we reject null
+summary(rainfall.trend1)
 
 # Exercise 12: Now remove the seasonality and apply another test. Compare the results with what you obtained on Exercise 9.
 
 
+rainfall.ts.noseason <-
+  ts(data = rainfall.components$Observed - rainfall.components$seasonal,
+     start = c(f_year, f_month),
+     frequency = 12) 
 
+mk.rainfall <- trend::mk.test(rainfall.ts.noseason)
+print(mk.rainfall)
 
+temp.ts.noseason <-
+  ts(data = temp.components$Observed - temp.components$seasonal,
+     start = c(f_year, f_month),
+     frequency = 12)
 
+mk.temp <- trend::mk.test(temp.ts.noseason)
+print(mk.temp)
 
+rainfall.components <-
+  mutate(rainfall.components, Rain_noseason = Observed - seasonal)
+temp.components <-
+  mutate(temp.components, Temp_noseason = Observed - seasonal)
 
-
-
-
+ggplot(rainfall.components) +
+  geom_line(aes(x = Date, y = ))
 
 ```
 
