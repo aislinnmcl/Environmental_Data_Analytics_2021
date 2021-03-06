@@ -137,6 +137,12 @@ GaringerOzone.clean <-
 ```{r}
 #9
 
+GaringerOzone.monthly <-
+  GaringerOzone.clean %>%
+  mutate(Month = month(Date)) %>%
+  mutate(Year = year(Date)) %>%
+  group_by(Year, Month)
+  
 
 
 
