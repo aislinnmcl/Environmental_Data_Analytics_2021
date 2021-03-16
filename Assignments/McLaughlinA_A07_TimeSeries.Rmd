@@ -225,16 +225,21 @@ ozone.conc.trend.plot
 ```{r}
 #15
 
-GaringerOzone.monthly.components.nonseas <-
-  as.data.frame(GaringerOzone.monthly.decomp$time.series[,2:3])
+GaringerOzone.monthly.components <-
+  as.data.frame(GaringerOzone.monthly.decomp$time.series[,1:3])
 
-GaringerOzone.monthly.components.nonseas <-
-  mutate(GaringerOzone.monthly.components.nonseas, 
-         Mean.Ozone = GaringerOzone.monthly$Mean_Ozone,
-         Date = GaringerOzone.monthly$Date)
+GaringerOzone.monthly.components <-
+  GaringerOzone.monthly.components %>%
+  mutate(Observed = GaringerOzone.monthly$Mean_Ozone,
+         Date = GaringerOzone.monthly$Date,
+         Nonseasonal_Observed = Observed - seasonal)
 
 GaringerOzone.monthly.nonseas.ts <-
-  ts(GaringerOzone.monthly.components.nonseas$Mean.Ozone, start = c(f_year, f_month), frequency = 12)
+  ts(GaringerOzone.monthly.components$Nonseasonal_Observed, start = c(f_year, f_month), frequency = 12)
+
+GaringerOzone.monthly.nonseas.decomp <-
+  stl(GaringerOzone.monthly.nonseas.ts, s.window = "periodic")
+plot(GaringerOzone.monthly.nonseas.decomp)
 
 #16
 
@@ -245,4 +250,4 @@ GaringerOzone.monthly.nonseas.trend
 
 ```
 
-> Answer: After removing seasonality, our p-value = 0.34 which is greater than 0.05. We fail to reject the null hypothesis so we cannot conclude that there is a non-seasonal trend in the data.
+> Answer: After removing seasonality, our p-value = 0.008 which is less than 0.05. Based on this finding we can reject the null hypothesis and conclude that there is a non-seasonal trend in the data.
