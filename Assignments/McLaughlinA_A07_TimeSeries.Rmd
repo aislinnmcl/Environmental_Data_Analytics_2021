@@ -107,7 +107,7 @@ ozone.conc.plot <-
   ggplot(GaringerOzone, aes(x = Date, y = Daily.Max.8.hour.Ozone.Concentration)) +
   geom_line() +
   geom_smooth(method = lm) +
-  labs(x = "Date", y = "Daily Ozone Concentration (ppm)", title = "Ozone Concentrations Over Time", subtitle = "Garinger High School, NC (2010-2019)")
+  labs(x = "Year", y = "Daily Ozone Concentration (ppm)", title = "Ozone Concentrations Over Time", subtitle = "Garinger High School, NC (2010-2019)")
 print(ozone.conc.plot)
 
 ```
@@ -168,7 +168,6 @@ GaringerOzone.daily.ts <-
 
 GaringerOzone.monthly.ts <-
   ts(GaringerOzone.monthly$Mean_Ozone, start = c(f_year, f_month), frequency = 12)
-
 ```
 
 
@@ -193,14 +192,13 @@ plot(GaringerOzone.monthly.decomp)
 ```{r}
 #12
 
-
 ozone.conc.trend <- Kendall::SeasonalMannKendall(GaringerOzone.monthly.ts)
 print(ozone.conc.trend)
 summary(ozone.conc.trend)
 
 ```
 
-> Answer: Seasonal Mann-Kendall is most appropriate because it allows missing values and is the only trend analysis that can account for seasonality which we would expect with our AQI and ozone data.
+> Answer: Seasonal Mann-Kendall is most appropriate because it is the only trend analysis that can account for seasonality which we would expect with our ozone concentration data.
 
 13. Create a plot depicting mean monthly ozone concentrations over time, with both a geom_point and a geom_line layer. Edit your axis labels accordingly.
 
@@ -218,7 +216,7 @@ ozone.conc.trend.plot
 
 14. To accompany your graph, summarize your results in context of the research question. Include output from the statistical test in parentheses at the end of your sentence. Feel free to use multiple sentences in your interpretation.
 
-> Answer: According to the graph of monthly mean ozone concentration over time and the results of the seasonal Mann-Kendall test, we can conclude that ozone concentrations vary seasonally. Our p-value is < 0.05 so we can reject the null hypothesis which is that the mean monthly ozone concentration does not have a seasonal trend (tau = -0.143, p-value = 0.046724).
+> Answer: According to the graph of monthly mean ozone concentration over time and the results of the seasonal Mann-Kendall test, we can conclude that ozone concentrations vary seasonally with peak values occuring during the summer months and low values in the winter months. Our p-value is < 0.05 so we can reject the null hypothesis which is that the mean monthly ozone concentration does not have a seasonal trend (tau = -0.143, p-value = 0.046724).
 
 15. Subtract the seasonal component from the `GaringerOzone.monthly.ts`. Hint: Look at how we extracted the series components for the EnoDischarge on the lesson Rmd file.
 
@@ -227,17 +225,16 @@ ozone.conc.trend.plot
 ```{r}
 #15
 
-GaringerOzone.monthly.components <-
-  as.data.frame(GaringerOzone.monthly.decomp$time.series[,1:3])
+GaringerOzone.monthly.components.nonseas <-
+  as.data.frame(GaringerOzone.monthly.decomp$time.series[,2:3])
 
-GaringerOzone.monthly.nonseas <-
-  GaringerOzone.monthly.components %>%
-  select(trend, remainder)
+GaringerOzone.monthly.components.nonseas <-
+  mutate(GaringerOzone.monthly.components.nonseas, 
+         Mean.Ozone = GaringerOzone.monthly$Mean_Ozone,
+         Date = GaringerOzone.monthly$Date)
 
 GaringerOzone.monthly.nonseas.ts <-
-  as.ts(GaringerOzone.monthly.nonseas)
-
-plot(GaringerOzone.monthly.nonseas.ts)
+  ts(GaringerOzone.monthly.components.nonseas$Mean.Ozone, start = c(f_year, f_month), frequency = 12)
 
 #16
 
@@ -248,4 +245,4 @@ GaringerOzone.monthly.nonseas.trend
 
 ```
 
-> Answer: After removing seasonality, our p-value is less than or equal to 2.22e-16 which is much smaller than 0.05. We can again reject the null hypothesis (even more strongly than in our seasonal Mann-Kendall trend analysis) and confirm there is a trend in the data.
+> Answer: After removing seasonality, our p-value = 0.34 which is greater than 0.05. We fail to reject the null hypothesis so we cannot conclude that there is a non-seasonal trend in the data.
