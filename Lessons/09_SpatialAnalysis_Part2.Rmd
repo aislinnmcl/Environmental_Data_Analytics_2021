@@ -29,6 +29,7 @@ The typical set up procedure: confirm the working directory and import libraries
 ```{r setup}
 #Examine the working directory
 getwd()
+setwd("~/Documents/GitHub/Environmental_Data_Analytics_2021")
 
 #Import libraries
 library(tidyverse)
@@ -48,7 +49,7 @@ First, we'll read in our EPA air quality sites, as we did in the previous exerci
 #Read our EPA points into a spatial dataframe
 epa_pm25_sites_sf <- read_csv('./Data/Raw/EPAair_PM25_NC2018_raw.csv') %>% 
   group_by(`Site Name`, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>% 
-  summarize(
+  dplyr::summarize(
     meanPM = mean(`Daily Mean PM2.5 Concentration`),
     maxPM = max(`Daily Mean PM2.5 Concentration`)
     ) %>% 
@@ -104,18 +105,23 @@ mapView(counties_sf, zcol = "AWATER")
 ```{r read HUCs shapefile}
 #Read the shapefile into an sf dataframe named "huc8_sf"
 
+huc8_sf <- st_read("./Data/Spatial/NCHUC8.shp")
 
 #Reveal the columns
 
+colnames(huc8_sf)
 
 #Check the CRS
 
+st_crs(huc8_sf)$epsg
 
 #Examine some records
 
+head(huc8_sf)
 
 #View the data as a map, colored by the acreage in each
 
+mapview(huc8_sf, zcol = "ACRES")
 
 ```
 
@@ -126,10 +132,16 @@ mapView(counties_sf, zcol = "AWATER")
 ```{r Select the Upper Neuse HUC 8}
 #Read the shapefile into an sf dataframe
 
-
+huc8_sf.v2 <-
+  st_read("./Data/Spatial/NCHUC8.shp") %>%
+  filter(SUBBASIN == "Upper Neuse")
 
 #Create a map
 
+mapview(huc8_sf.v2)
+
+mapview(huc8_sf, col.regions = "orange") +
+  mapview(huc8_sf.v2, col.regions = "purple")
 
 ```
 
@@ -162,7 +174,7 @@ nc_powerplants_sf <- powerplants_sf %>%
 #Have a look the variety of types (and number of each)
 nc_powerplants_sf %>% 
   st_drop_geometry() %>% 
-  count(TYPE, sort=TRUE)
+  dplyr::count(TYPE, sort=TRUE)
 
 #Most are solar farms; let's remove those
 nc_powerplants_sf <- nc_powerplants_sf %>% 
@@ -226,7 +238,10 @@ ggplot() +
 ```{r}
 #Compute HUC8 wind energy
 
-
+huc8_wind <-
+  read.csv(
+    "https://raw.githubusercontent.com/ENV859/EnviroAtlasData/main/Wind_Energy.csv",
+    colClasses = c("HUC_12" = "factor"))
 
 
 #Join to HUC_8 features

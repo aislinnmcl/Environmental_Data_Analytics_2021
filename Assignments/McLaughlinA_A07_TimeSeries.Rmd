@@ -107,7 +107,10 @@ ozone.conc.plot <-
   ggplot(GaringerOzone, aes(x = Date, y = Daily.Max.8.hour.Ozone.Concentration)) +
   geom_line() +
   geom_smooth(method = lm) +
-  labs(x = "Year", y = "Daily Ozone Concentration (ppm)", title = "Ozone Concentrations Over Time", subtitle = "Garinger High School, NC (2010-2019)")
+  labs(x = "Year", 
+       y = "Daily Ozone Concentration (ppm)", 
+       title = "Ozone Concentrations Over Time", 
+       subtitle = "Garinger High School, NC (2010-2019)")
 print(ozone.conc.plot)
 
 ```
@@ -125,7 +128,8 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 GaringerOzone.clean <- 
   GaringerOzone %>% 
-  mutate(Daily.Max.8.hour.Ozone.Concentration = zoo::na.approx(Daily.Max.8.hour.Ozone.Concentration))
+  mutate(Daily.Max.8.hour.Ozone.Concentration =zoo::na.approx(
+    Daily.Max.8.hour.Ozone.Concentration))
 
 ```
 
@@ -164,10 +168,14 @@ f_year <-
   year(first(GaringerOzone.monthly$Date))
 
 GaringerOzone.daily.ts <- 
-  ts(GaringerOzone.clean$Daily.Max.8.hour.Ozone.Concentration, start = c(2010, 1), frequency = 365)
+  ts(GaringerOzone.clean$Daily.Max.8.hour.Ozone.Concentration, 
+     start = c(2010, 1), 
+     frequency = 365)
 
 GaringerOzone.monthly.ts <-
-  ts(GaringerOzone.monthly$Mean_Ozone, start = c(f_year, f_month), frequency = 12)
+  ts(GaringerOzone.monthly$Mean_Ozone, 
+     start = c(f_year, f_month), 
+     frequency = 12)
 ```
 
 
@@ -209,7 +217,10 @@ ozone.conc.trend.plot <-
   ggplot(GaringerOzone.monthly, aes(x = Date, y = Mean_Ozone)) +
   geom_point() +
   geom_line() +
-  labs(x = "Date", y = "Mean Monthly Ozone Concentration (ppm)", title = "Ozone Concentration", subtitle = "2010-2019")
+  labs(x = "Year", 
+       y = "Mean Monthly Ozone Concentration (ppm)", 
+       title = "Ozone Concentration", 
+       subtitle = "2010-2019")
 ozone.conc.trend.plot
 
 ```
@@ -235,11 +246,9 @@ GaringerOzone.monthly.components <-
          Nonseasonal_Observed = Observed - seasonal)
 
 GaringerOzone.monthly.nonseas.ts <-
-  ts(GaringerOzone.monthly.components$Nonseasonal_Observed, start = c(f_year, f_month), frequency = 12)
-
-GaringerOzone.monthly.nonseas.decomp <-
-  stl(GaringerOzone.monthly.nonseas.ts, s.window = "periodic")
-plot(GaringerOzone.monthly.nonseas.decomp)
+  ts(GaringerOzone.monthly.components$Nonseasonal_Observed, 
+     start = c(f_year, f_month), 
+     frequency = 12)
 
 #16
 
