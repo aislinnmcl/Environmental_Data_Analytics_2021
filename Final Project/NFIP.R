@@ -1,30 +1,6 @@
-library(rstudioapi); #I think you need this to run R on Duke folders
-library(readxl);
-library(tidycensus); library(plotly);                             #tidyCensus is very helpful; plotly is useful for plotting results
-library(tidyverse); library(lubridate);        
-library(rgdal); library(sf);                                      #these are good for spatial data
-library(leaflet);                                                 #need this to plot more than one dataset on a map
-
-options(scipen=999) #changes scientific notation to numeric
-rm(list = setdiff(ls(), lsf.str())) #removes anything but functions
-
-#assign API URL to variable
-NFIP <- "https://www.fema.gov/api/open/v1/FimaNfipClaims"
-
-#call API
-NFIP.api.GET <-
-  httr::GET(url = NFIP)
-NFIP.api.GET
-
-#check API call status
-httr::http_status(NFIP.api.GET)
-
-#check content of API, see if it looks like what we want
-httr::content(NFIP.api.GET, as = "text")
-
-###################################################################
-###################################################################
-###################################################################
+#Links
+# https://www.fema.gov/about/openfema/api
+# https://www.fema.gov/openfema-data-page/fima-nfip-redacted-claims-v1
 
 # Paging example in R. Receiving data in JSON, saving in RDS - a single R object.
 
@@ -39,13 +15,14 @@ require("httr")         # wrapper for curl package - may require installation
 
 datalist = list()       # a list that will hold the results of each call
 
+#filter for NC, 2015-present
 
-baseUrl <- "https://www.fema.gov/api/open/v1/FimaNfipClaims?"
+baseUrl <- "https://www.fema.gov/api/open/v1/FimaNfipClaims?$filter=(yearOfLoss%20ge%202015%20and%20state%20eq%20'NC')"
 
 
 # Determine record count. Specifying only 1 column here to reduce amount of data returned. 
 #   Remember to add criteria/filter here (if you have any) to get an accurate count.
-result <- GET(paste0(baseUrl,"$inlinecount=allpages&$filter=state eq 'NC'"))
+result <- GET(paste0(baseUrl,"&$inlinecount=allpages&$top=1&$select=id"))
 jsonData <- content(result)         # should automatically parse as JSON as that is mime type
 recCount <- jsonData$metadata$count
 
@@ -65,7 +42,7 @@ skip <- 0
 for(i in seq(from=0, to=loopNum, by=1)){
   # As above, if you have filters, specific fields, or are sorting, add that to the base URL 
   #   or make sure it gets concatenated here.
-  result <- GET(paste0(baseUrl,"$metadata=off&$top=",top,"&$skip=",i * top))
+  result <- GET(paste0(baseUrl,"&$metadata=off&$top=",top,"&$skip=",i * top))
   jsonData <- content(result)         # should automatically parse as JSON as that is mime type
   
   
@@ -85,9 +62,9 @@ for(i in seq(from=0, to=loopNum, by=1)){
   
   # Save as one R object - probably more useful (and storage efficient) than CSV or JSON if doing
   #   analysis within R.
-  saveRDS(fullData, file = "output.rds")
+  saveRDS(fullData, file = "./Final Project/NFIP.NC.2015.2021.rds")
   
   
   # open file just to verify that we got what we expect
-  my_data <- readRDS(file = "output.rds")
+  my_data <- readRDS(file = "./Final Project/NFIP.NC.2015.2021.rds")
   print(paste0("END ",Sys.time(), ", ", nrow(my_data), " records in file"))}
