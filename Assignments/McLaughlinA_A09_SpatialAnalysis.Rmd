@@ -226,9 +226,13 @@ Up next we will do some spatial analysis with our data. To prepare for this, we 
 ```{r}
 #20 Transform the counties and gage location datasets to UTM Zone 14
 
+counties_sf_utm <- st_transform(counties_sf, crs = 26914)
+gage_loc_heights_sf_utm <- st_transform(gage_loc_heights_sf, crs = 26914)
 
 #21 Plot the data
 
+mapview(counties_sf_utm, col.regions = "NA", layer.name = "Counties") +
+  mapview(gage_loc_heights_sf, col.regions = "blue", alpha.regions = 0.5, layer.name = "USGS Stream Gages")
 
 ```
 
@@ -247,12 +251,20 @@ Now let's zoom into a particular county and examine the gages located there.
 ```{r}
 #22 Select the county
 
+Lancaster_sf_utm <-
+  counties_sf_utm %>%
+  filter(NAME == "Lancaster")
 
 #23 Select gages within the selected county
 
+Lancaster_gages_sf_utm <-
+  gage_loc_heights_sf_utm[Lancaster_sf_utm,]
 
 #24 Plot
 
+mapview(counties_sf, col.regions = "white", layer.name = "Counties") +
+  mapview(Lancaster_sf_utm, col.regions = "green", layer.name = "Lancaster County") +
+  mapview(Lancaster_gages_sf_utm, col.regions = "blue", layer.name = "USGS Gages in Lancaster")
 
 
 ```
