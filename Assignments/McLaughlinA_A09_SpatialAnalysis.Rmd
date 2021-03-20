@@ -1,11 +1,13 @@
 ---
-title: "Assignment 9: Spatial Analysis in R"
+title: 'Assignment 9: Spatial Analysis in R'
 author: "Aislinn McLaughlin"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 geometry: margin=2.54cm
-editor_options: 
+editor_options:
   chunk_output_type: console
-  markdown: 
+  markdown:
     wrap: 72
 ---
 
@@ -31,8 +33,8 @@ This exercise accompanies the lessons in Environmental Data Analytics (ENV872L) 
 ```{r Prepare workspace}
 #1.
 
-getwd()
 setwd("~/Documents/GitHub/Environmental_Data_Analytics_2021")
+getwd()
 
 #2. 
 
@@ -57,7 +59,7 @@ In this exercise, we will be exploring stream gage height data in Nebraska corre
 #3. Read in Counties shapefile into an sf dataframe, filtering for just NE counties
 
 counties_sf <-
-  st_read("./Data/Spatial/cb_2018_us_county_20m.shp") %>%
+  read_sf("./Data/Spatial/cb_2018_us_county_20m.shp") %>%
   filter(STATEFP == 31)
 
 #4. Reveal the CRS of the counties features
@@ -67,7 +69,9 @@ st_crs(counties_sf)
 #5. Plot the data
 
 ggplot(counties_sf) +
-  geom_sf()
+  theme(plot.title = element_text(face = "bold", size = 14, color = "black", hjust = 0.5)) +
+  geom_sf() +
+  labs(title = "Nebraska Counties")
 
 ```
 
@@ -123,7 +127,7 @@ colnames(gages_sf)
 
 12. What new field(s) appear in the sf dataframe created? What field(s), if any, disappeared?
 
->ANSWER: "dec_long_va" and "dec_lat_va" have been comined into a column called "geometry".
+>ANSWER: "dec_long_va" and "dec_lat_va" have been combined into a column called "geometry".
 
 ### Plot the gage locations on top of the counties
 
@@ -231,7 +235,7 @@ gage_loc_heights_sf_utm <- st_transform(gage_loc_heights_sf, crs = 26914)
 
 #21 Plot the data
 
-mapview(counties_sf_utm, col.regions = "NA", layer.name = "Counties") +
+mapview(counties_sf_utm, col.regions = "gray", layer.name = "Counties") +
   mapview(gage_loc_heights_sf, col.regions = "blue", alpha.regions = 0.5, layer.name = "USGS Stream Gages")
 
 ```
@@ -262,7 +266,7 @@ Lancaster_gages_sf_utm <-
 
 #24 Plot
 
-mapview(counties_sf, col.regions = "white", layer.name = "Counties") +
+mapview(counties_sf, col.regions = "gray", layer.name = "Counties") +
   mapview(Lancaster_sf_utm, col.regions = "green", layer.name = "Lancaster County") +
   mapview(Lancaster_gages_sf_utm, col.regions = "blue", layer.name = "USGS Gages in Lancaster")
 
