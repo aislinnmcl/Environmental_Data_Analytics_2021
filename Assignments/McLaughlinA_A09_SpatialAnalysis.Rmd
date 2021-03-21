@@ -33,8 +33,9 @@ This exercise accompanies the lessons in Environmental Data Analytics (ENV872L) 
 ```{r Prepare workspace}
 #1.
 
-setwd("~/Documents/GitHub/Environmental_Data_Analytics_2021")
 getwd()
+setwd("~/Documents/GitHub/Environmental_Data_Analytics_2021")
+
 
 #2. 
 
@@ -203,9 +204,9 @@ gage_loc_heights_sf <-
            coords = c("dec_long_va", "dec_lat_va"), crs = 4269)
 
 mapview(gage_loc_heights_sf,
-        cex = "gage_ht") +
+        cex = "gage_ht", layer.name = "USGS Stream Gages") +
   mapview(counties_sf, 
-          col.regions = "white")
+          col.regions = "gray", layer.name = "Counties")
 
 #ggplot
 
