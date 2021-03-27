@@ -68,3 +68,7 @@ for(i in seq(from=0, to=loopNum, by=1)){
   # open file just to verify that we got what we expect
   my_data <- readRDS(file = "./Final Project/NFIP.NC.2015.2021.rds")
   print(paste0("END ",Sys.time(), ", ", nrow(my_data), " records in file"))}
+
+summary(unlist(my_data))
+
+class(my_data)
