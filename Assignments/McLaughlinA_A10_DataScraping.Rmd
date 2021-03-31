@@ -165,7 +165,9 @@ scrape.it <- function(the_year, the_pwsid){
     mutate(System = !!the_water_system,
            PWSID = !!the_pwsid,
            Ownership = !!the_ownership,
-           Date = my(paste(Month,"-",Year)))
+           Month = c("Jan", "May", "Sept", "Feb", "Jun", "Oct", "Mar", "Jul", "Nov", "Apr", "Aug", "Dec"),
+           Year = the_year,
+           Date = my(paste(Month, "-", Year)))
   
   #Pause for a moment - scraping etiquette
   #Sys.sleep(1) #uncomment this if you are doing bulk scraping!

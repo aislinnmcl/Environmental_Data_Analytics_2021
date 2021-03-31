@@ -89,8 +89,9 @@ kable(df)
 
 Create an R chunk below that installs the package `knitr`. Instead of commenting out the code, customize the chunk options such that the code is not evaluated (i.e., not run).
 
-```{r}
+```{r eval = FALSE}
 
+install.packages("knitr")
 
 
 ```
@@ -103,6 +104,32 @@ Load the NTL-LTER_Lake_Nutrients_Raw dataset, display the head of the dataset, a
 
 Customize the chunk options such that the code is run but is not displayed in the final document.
 
+```{r setup, include = FALSE}
+
+setwd("~/Documents/GitHub/Environmental_Data_Analytics_2021")
+getwd()
+
+library(tidyverse)
+library(lubridate)
+library(knitr)
+
+mytheme <-
+  theme_gray(base_size = 12) +
+  theme(legend.background = element_rect(fill = "gray"), legend.position = "bottom",
+        plot.title = element_text(face = "bold", size = 14, color = "black", hjust = 0.5),
+        plot.subtitle = element_text(size = 10, color = "gray", hjust = 0.5))
+
+theme_set(mytheme)
+
+nutrients <- read.csv("./Data/Raw/NTL-LTER_Lake_Nutrients_Raw.csv")
+
+head(nutrients)
+
+nutrients <-
+    nutrients %>%
+    mutate(sampledate = as.Date(sampledate, "%m/%d/%y"))
+
+```
 
 ### Data Exploration, Wrangling, and Visualization
 
@@ -112,13 +139,77 @@ Create an R chunk below to create a processed dataset do the following operation
 -   Include only surface samples (depth = 0 m)
 -   Drop rows with missing data
 
+```{r}
+
+nutrients.processed <-
+    nutrients %>%
+    select(-c(lakeid, depth_id, comments)) %>%
+    filter(depth == 0) %>%
+    na.omit()
+
+```
+
 Create a second R chunk to create a summary dataset with the mean, minimum, maximum, and standard deviation of total nitrogen concentrations for each lake. Create a second summary dataset that is identical except that it evaluates total phosphorus. Customize the chunk options such that the code is run but not displayed in the final document.
 
+
+```{r, include = FALSE}
+
+nutrients.summary.nitrogen <-
+    nutrients.processed %>%
+    group_by(lakename) %>%
+    summarise(Mean = mean(tn_ug),
+              Maximum = max(tn_ug),
+              Minimum = min(tn_ug),
+              Std_Dev = sd(tn_ug)) %>%
+    rename(Lake_Name = lakename)
+
+nutrients.summary.phosphorus <-
+    nutrients.processed %>%
+    group_by(lakename) %>%
+    summarise(Mean = mean(tp_ug),
+              Maximum = max(tp_ug),
+              Minimum = min(tp_ug),
+              Std_Dev = sd(tp_ug)) %>%
+    rename(Lake_Name = lakename)
+
+```
+
 Create a third R chunk that uses the function `kable` in the knitr package to display two tables: one for the summary dataframe for total N and one for the summary dataframe of total P. Use the `caption = " "` code within that function to title your tables. Customize the chunk options such that the final table is displayed but not the code used to generate the table.
+
+```{r, echo = FALSE}
+
+kable(nutrients.summary.nitrogen, caption = "Summary Statistics for Total Nitrogen by Lake")
+
+kable(nutrients.summary.phosphorus, caption = "Summary Statistics for Total Phosphorus by Lake")
+
+
+```
 
 Create a fourth and fifth R chunk that generates two plots (one in each chunk): one for total N over time with different colors for each lake, and one with the same setup but for total P. Decide which geom option will be appropriate for your purpose, and select a color palette that is visually pleasing and accessible. Customize the chunk options such that the final figures are displayed but not the code used to generate the figures. In addition, customize the chunk options such that the figures are aligned on the left side of the page. Lastly, add a fig.cap chunk option to add a caption (title) to your plot that will display underneath the figure.
 
 
+```{r, echo = FALSE}
+
+plot.nitrogen <-
+    ggplot(nutrients.processed, aes(x = sampledate, y = tn_ug, color = lakename)) +
+    geom_line() +
+    labs(title = "Total Nitrogren by Lake", subtitle = "1991-1999")
+print(plot.nitrogen)
+
+
+
+```
+
+
+```{r, echo = FALSE}
+
+plot.phosphorus <-
+    ggplot(nutrients.processed, aes(x = sampledate, y = tp_ug, color = lakename)) +
+    geom_line() +
+    labs(title = "Total Phosphorus by Lake", subtitle = "1991-1999")
+print(plot.phosphorus)
+
+```
 ### Communicating results
 
 Write a paragraph describing your findings from the R coding challenge above. This should be geared toward an educated audience but one that is not necessarily familiar with the dataset. Then insert a horizontal rule below the paragraph. Below the horizontal rule, write another paragraph describing the next steps you might take in analyzing this dataset. What questions might you be able to answer, and what analyses would you conduct to answer those questions?
