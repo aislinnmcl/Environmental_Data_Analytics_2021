@@ -4,6 +4,7 @@
 
 # Paging example in R. Receiving data in JSON, saving in RDS - a single R object.
 
+#install.packages("tidyjson")
 
 require("httr")         # wrapper for curl package - may require installation
 
@@ -63,12 +64,15 @@ for(i in seq(from=0, to=loopNum, by=1)){
   # Save as one R object - probably more useful (and storage efficient) than CSV or JSON if doing
   #   analysis within R.
   saveRDS(fullData, file = "./Final Project/NFIP.NC.2015.2021.rds")
-  
+#  write.csv(fullData, file = "./Final Project/NFIP.test.csv")  
   
   # open file just to verify that we got what we expect
   my_data <- readRDS(file = "./Final Project/NFIP.NC.2015.2021.rds")
   print(paste0("END ",Sys.time(), ", ", nrow(my_data), " records in file"))}
 
-summary(unlist(my_data))
+#summary(unlist(my_data))
 
-class(my_data)
+#class(my_data)
+
+#####
+
