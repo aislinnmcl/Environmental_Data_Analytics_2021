@@ -71,7 +71,7 @@ See: <https://rmarkdown.rstudio.com> and class recording.
 
 Create a table below that details the example datasets we have been using in class. The first column should contain the names of the datasets and the second column should include some relevant information about the datasets. (Hint: use the cheat sheets to figure out how to make a table in Rmd)
 
-```{r echo = FALSE, results = 'asis'}
+```{r echo = FALSE, message = FALSE}
 library(knitr)
 library(tidyverse)
 Name <- c("EPA", "LTER")
@@ -116,6 +116,7 @@ library(knitr)
 mytheme <-
   theme_gray(base_size = 12) +
   theme(legend.background = element_rect(fill = "gray"), legend.position = "bottom",
+        legend.key.size = unit(0.5, "cm"), legend.title = element_text(size = 8),
         plot.title = element_text(face = "bold", size = 14, color = "black", hjust = 0.5),
         plot.subtitle = element_text(size = 10, color = "gray", hjust = 0.5))
 
@@ -143,6 +144,7 @@ Create an R chunk below to create a processed dataset do the following operation
 
 nutrients.processed <-
     nutrients %>%
+    rename(Lake_Name = lakename) %>%
     select(-c(lakeid, depth_id, comments)) %>%
     filter(depth == 0) %>%
     na.omit()
@@ -152,25 +154,23 @@ nutrients.processed <-
 Create a second R chunk to create a summary dataset with the mean, minimum, maximum, and standard deviation of total nitrogen concentrations for each lake. Create a second summary dataset that is identical except that it evaluates total phosphorus. Customize the chunk options such that the code is run but not displayed in the final document.
 
 
-```{r, include = FALSE}
+```{r, echo = FALSE}
 
 nutrients.summary.nitrogen <-
     nutrients.processed %>%
-    group_by(lakename) %>%
+    group_by(Lake_Name) %>%
     summarise(Mean = mean(tn_ug),
               Maximum = max(tn_ug),
               Minimum = min(tn_ug),
-              Std_Dev = sd(tn_ug)) %>%
-    rename(Lake_Name = lakename)
+              Std_Dev = sd(tn_ug))
 
 nutrients.summary.phosphorus <-
     nutrients.processed %>%
-    group_by(lakename) %>%
+    group_by(Lake_Name) %>%
     summarise(Mean = mean(tp_ug),
               Maximum = max(tp_ug),
               Minimum = min(tp_ug),
-              Std_Dev = sd(tp_ug)) %>%
-    rename(Lake_Name = lakename)
+              Std_Dev = sd(tp_ug))
 
 ```
 
@@ -188,12 +188,12 @@ kable(nutrients.summary.phosphorus, caption = "Summary Statistics for Total Phos
 Create a fourth and fifth R chunk that generates two plots (one in each chunk): one for total N over time with different colors for each lake, and one with the same setup but for total P. Decide which geom option will be appropriate for your purpose, and select a color palette that is visually pleasing and accessible. Customize the chunk options such that the final figures are displayed but not the code used to generate the figures. In addition, customize the chunk options such that the figures are aligned on the left side of the page. Lastly, add a fig.cap chunk option to add a caption (title) to your plot that will display underneath the figure.
 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.align="left", fig.cap="Total Nitrogen by Lake"}
 
 plot.nitrogen <-
-    ggplot(nutrients.processed, aes(x = sampledate, y = tn_ug, color = lakename)) +
+    ggplot(nutrients.processed, aes(x = sampledate, y = tn_ug, color = Lake_Name)) +
     geom_line() +
-    labs(title = "Total Nitrogren by Lake", subtitle = "1991-1999")
+    labs(title = "Total Nitrogen by Lake", subtitle = "1991-1999", x = "Date", y = "Total Nitrogen (µg)")
 print(plot.nitrogen)
 
 
@@ -201,12 +201,12 @@ print(plot.nitrogen)
 ```
 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.align="left", fig.cap="Total Phosphorus by Lake"}
 
 plot.phosphorus <-
-    ggplot(nutrients.processed, aes(x = sampledate, y = tp_ug, color = lakename)) +
+    ggplot(nutrients.processed, aes(x = sampledate, y = tp_ug, color = Lake_Name)) +
     geom_line() +
-    labs(title = "Total Phosphorus by Lake", subtitle = "1991-1999")
+    labs(title = "Total Phosphorus by Lake", subtitle = "1991-1999", x = "Date", y = "Total Phosphorus (µg)")
 print(plot.phosphorus)
 
 ```
