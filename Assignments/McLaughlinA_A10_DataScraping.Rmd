@@ -120,7 +120,9 @@ df <- data.frame(
 
 df <-
   df %>%
-  mutate(Month = c("Jan", "May", "Sept", "Feb", "Jun", "Oct", "Mar", "Jul", "Nov", "Apr", "Aug", "Dec"),
+  mutate(Month = c("Jan", "May", "Sept", "Feb", 
+                   "Jun", "Oct", "Mar", "Jul", 
+                   "Nov", "Apr", "Aug", "Dec"),
          Year = the_year,
          Date = my(paste(Month, "-", Year)))
 
@@ -130,7 +132,10 @@ max.withdraw.plot <-
   ggplot(df, aes(x = Date, y = Maximum_Daily_Withdrawal)) +
   geom_point(color = "blue") +
   geom_line() +
-  labs(x = "Date", y = "Maximum Daily Withdrawal in a Month", title = "Durham Water Withdrawals")
+  labs(x = "Date", 
+       y = "Maximum Daily Withdrawal in a Month (MGD)", 
+       title = "Water Withdrawals", 
+       subtitle = "Durham 2019")
 print(max.withdraw.plot)
 
 ```
@@ -165,7 +170,9 @@ scrape.it <- function(the_year, the_pwsid){
     mutate(System = !!the_water_system,
            PWSID = !!the_pwsid,
            Ownership = !!the_ownership,
-           Month = c("Jan", "May", "Sept", "Feb", "Jun", "Oct", "Mar", "Jul", "Nov", "Apr", "Aug", "Dec"),
+           Month = c("Jan", "May", "Sept", "Feb", 
+                     "Jun", "Oct", "Mar", "Jul", 
+                     "Nov", "Apr", "Aug", "Dec"),
            Year = the_year,
            Date = my(paste(Month, "-", Year)))
   
@@ -191,7 +198,9 @@ plot.durh.2015 <-
   ggplot(data = df_durh_2015, aes(x = Date, y = Max_Withdrawals_mgd)) +
   geom_point() +
   geom_line() + 
-  labs(y = "Average MGD", title = "Maximum Water Withdrawals", subtitle = paste("Durham", the_year))
+  labs(y = "Maximum Daily Withdrawal in a Month (MGD)", 
+       title = "Water Withdrawals", 
+       subtitle = "Durham 2015")
 print(plot.durh.2015)
 
 ```
@@ -208,10 +217,13 @@ df_combo_2015 <-
   rbind(df_durh_2015, df_ashe_2015)
 
 plot.compare.2015 <-
-  ggplot(data = df_combo_2015, aes(x = Date, y = Max_Withdrawals_mgd, color = System)) + 
+  ggplot(data = df_combo_2015, 
+         aes(x = Date, y = Max_Withdrawals_mgd, color = System)) + 
   geom_point() + 
   geom_line(aes(group = System)) +
-  labs(y = "Maximum Withdrawal (MGD)", title = "Maximum Water Withdrawals", subtitle = paste("Durham and Asheville,", the_year))
+  labs(y = "Maximum Daily Withdrawal in a Month (MGD)", 
+       title = "Water Withdrawals", 
+       subtitle = "Durham and Asheville, 2015")
 print(plot.compare.2015)
   
 
@@ -235,14 +247,17 @@ the_dfs <-
 df_ashe_decade <-
   bind_rows(the_dfs)
 
-plot.ashe.decade <- ggplot(df_ashe_decade,aes(x =Date, y = Max_Withdrawals_mgd)) +
+plot.ashe.decade <- ggplot(df_ashe_decade,
+                           aes(x =Date, y = Max_Withdrawals_mgd)) +
   geom_line() + 
   geom_smooth(method="loess",se=FALSE) +
-  labs(y = "Maximum Withdrawal (MGD)", title = "Maximum Water Withdrawals", subtitle = "Asheville, 2010-2019")
+  labs(y = "Maximum Daily Withdrawal in a Month (MGD)", 
+       title = "Water Withdrawals", 
+       subtitle = "Asheville, 2010-2019")
 print(plot.ashe.decade)
 
 ```
 
 >Question: Just by looking at the plot (i.e. not running statistics), does Asheville have a trend in water usage over time?
 
-Yes. Asheville's maximum daily withdrawal in a single month appears to have increased over the past 10 years.
+Yes. Asheville's maximum daily withdrawal each month appears to have increased over the past 10 years.

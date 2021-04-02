@@ -65,7 +65,10 @@ See: <https://rmarkdown.rstudio.com> and class recording.
 
 <Fill in our discussion below with bullet points. Use italics and bold for emphasis (hint: use the cheat sheets or `Help` →`Markdown Quick Reference` to figure out how to make bold and italic text).> 
 
-*R Markdown is limited to ~~one language~~ **many languages**
+* Can save different output types (e.g. PDF, HTML)
+* Text formatting facilitates use with GitHub version control
+* Easy to format code, text, graphics
+
 
 ## TEXT EDITING CHALLENGE
 
