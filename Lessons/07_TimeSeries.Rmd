@@ -19,6 +19,9 @@ Today we will work with two datasets. The USGS dataset on discharge at the Eno R
 
 ```{r, message = FALSE}
 
+setwd("~/Documents/GitHub/Environmental_Data_Analytics_2021")
+
+
 library(tidyverse)
 library(lubridate)
 #install.packages("trend")
